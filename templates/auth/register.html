@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+{% block title %}Create an account — StudentProjectHub{% endblock %}
+{% block body_class %}gate{% endblock %}
+{% block main_class %}gate-shell{% endblock %}
+
+{% block content %}
+<section class="gate-pitch">
+  <span class="mark-seal mark-seal--lg" aria-hidden="true"></span>
+  <h1 class="display">Start building<br>a record.</h1>
+  <p class="lede">One account, two ways in. Students collect verified project experience. Companies get real briefs delivered and assessed.</p>
+</section>
+
+<section class="card">
+  <p class="record-label">Create account</p>
+  <h2 class="card-title">Tell us who you are</h2>
+
+  <form method="post" novalidate id="signup">
+    <div class="role-picker">
+      <label class="role-option">
+        <input type="radio" name="role" value="student" {% if form.role != 'client' %}checked{% endif %}>
+        <span class="role-card">
+          <strong>Student</strong>
+          <em>Apply for briefs and build a portfolio</em>
+        </span>
+      </label>
+      <label class="role-option">
+        <input type="radio" name="role" value="client" {% if form.role == 'client' %}checked{% endif %}>
+        <span class="role-card">
+          <strong>Client</strong>
+          <em>Post projects and assess the work</em>
+        </span>
+      </label>
+    </div>
+
+    <label class="field">
+      <span>Full name</span>
+      <input type="text" name="fullname" value="{{ form.fullname or '' }}" required autocomplete="name">
+    </label>
+
+    <label class="field">
+      <span>Email</span>
+      <input type="email" name="email" value="{{ form.email or '' }}" required autocomplete="email">
+    </label>
+
+    <div class="field-group" data-role="student">
+      <label class="field">
+        <span>University</span>
+        <input type="text" name="university" value="{{ form.university or '' }}" placeholder="e.g. University of Lagos">
+      </label>
+      <div class="field-row">
+        <label class="field">
+          <span>Department</span>
+          <input type="text" name="department" value="{{ form.department or '' }}" placeholder="Computer Science">
+        </label>
+        <label class="field">
+          <span>Level</span>
+          <input type="text" name="level" value="{{ form.level or '' }}" placeholder="300">
+        </label>
+      </div>
+    </div>
+
+    <div class="field-group" data-role="client" hidden>
+      <label class="field">
+        <span>Company or organisation</span>
+        <input type="text" name="company_name" value="{{ form.company_name or '' }}">
+      </label>
+      <label class="field">
+        <span>Website <em class="opt">optional</em></span>
+        <input type="url" name="website" value="{{ form.website or '' }}" placeholder="https://">
+      </label>
+    </div>
+
+    <label class="field">
+      <span>Phone <em class="opt">optional</em></span>
+      <input type="tel" name="phone" value="{{ form.phone or '' }}" autocomplete="tel">
+    </label>
+
+    <div class="field-row">
+      <label class="field">
+        <span>Password</span>
+        <input type="password" name="password" required minlength="8" autocomplete="new-password">
+      </label>
+      <label class="field">
+        <span>Repeat password</span>
+        <input type="password" name="confirm" required minlength="8" autocomplete="new-password">
+      </label>
+    </div>
+
+    <button class="btn btn--full" type="submit">Create account</button>
+  </form>
+
+  <p class="card-foot">Already registered? <a href="{{ url_for('auth.login') }}">Sign in</a></p>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/register.js') }}"></script>
+{% endblock %}

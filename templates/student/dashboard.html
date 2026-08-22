@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}Student dashboard — StudentProjectHub{% endblock %}
+
+{% block content %}
+<section class="page-head page-head--split">
+  <div>
+  <p class="record-label">Student record</p>
+  <h1 class="display">{{ g.user.fullname }}</h1>
+  <p class="lede">
+    {% if profile.university %}{{ profile.university }}{% endif %}
+    {%- if profile.department %} · {{ profile.department }}{% endif %}
+    {%- if profile.level %} · {{ profile.level }} level{% endif %}
+  </p>
+  </div>
+  <a class="btn" href="{{ url_for('student.browse') }}">Find work</a>
+</section>
+
+<section class="stat-grid">
+  <article class="stat"><p class="stat-num">{{ stats.open_projects }}</p><p class="stat-label">Projects open</p></article>
+  <article class="stat"><p class="stat-num">{{ stats.applications }}</p><p class="stat-label">Applications pending</p></article>
+  <article class="stat"><p class="stat-num">{{ stats.active }}</p><p class="stat-label">Active projects</p></article>
+  <article class="stat"><p class="stat-num">{{ stats.completed }}</p><p class="stat-label">Completed</p></article>
+  <article class="stat stat--seal"><p class="stat-num">{{ stats.certificates }}</p><p class="stat-label">Certificates</p></article>
+</section>
+
+<section class="panel">
+  <h2 class="panel-title">Your active projects</h2>
+  {% if active %}
+  <table class="ledger">
+    <thead><tr><th>Project</th><th>Client</th><th>Status</th><th>Deadline</th></tr></thead>
+    <tbody>
+      {% for a in active %}
+      <tr>
+        <td>{{ a.title }}</td>
+        <td>{{ a.client_name }}</td>
+        <td><span class="status status--{{ a.status }}">{{ a.status }}</span></td>
+        <td class="mono">{{ a.deadline.strftime('%d %b %Y') }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p class="empty">Nothing assigned yet. Browse the open briefs and apply.</p>
+  {% endif %}
+</section>
+{% endblock %}

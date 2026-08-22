@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %}Your projects — StudentProjectHub{% endblock %}
+
+{% block content %}
+<section class="page-head page-head--split">
+  <div>
+    <p class="record-label">Your briefs</p>
+    <h1 class="display">Projects</h1>
+  </div>
+  <a class="btn" href="{{ url_for('client.create_project') }}">Post a project</a>
+</section>
+
+{% if projects %}
+<div class="project-list">
+  {% for p in projects %}
+  <article class="project">
+    <div class="project-head">
+      <h2 class="project-title">{{ p.title }}</h2>
+      <span class="status status--{{ p.status }}">{{ p.status }}</span>
+    </div>
+
+    <dl class="project-meta">
+      <div><dt>Category</dt><dd>{{ p.category }}</dd></div>
+      <div><dt>Difficulty</dt><dd>{{ p.difficulty|capitalize }}</dd></div>
+      <div><dt>Reward</dt>
+        <dd>{% if p.budget and p.budget > 0 %}₦{{ '{:,.0f}'.format(p.budget) }}{% else %}Experience only{% endif %}</dd></div>
+      <div><dt>Deadline</dt>
+        <dd>{{ p.deadline.strftime('%d %b %Y') }}{% if p.deadline < today %} · passed{% endif %}</dd></div>
+      <div><dt>Places</dt><dd>{{ p.max_students }}</dd></div>
+      <div><dt>Applications</dt><dd>{{ p.pending_applications }} pending</dd></div>
+    </dl>
+
+    {% if p.skill_list %}<p class="project-skills">{{ p.skill_list }}</p>{% endif %}
+
+    <div class="project-actions">
+      {% if p.status in ('open', 'assigned', 'completed') %}
+      <a class="btn btn--small" href="{{ url_for('client.applicants', project_id=p.id) }}">
+        Applicants ({{ p.pending_applications }})</a>
+      {% endif %}
+      {% if p.status == 'draft' %}
+      <form method="post" action="{{ url_for('client.publish_project', project_id=p.id) }}">
+        <button class="btn btn--small" type="submit">Publish</button>
+      </form>
+      {% endif %}
+      {% if p.status in ('draft', 'open') %}
+      <form method="post" action="{{ url_for('client.close_project', project_id=p.id) }}">
+        <button class="btn btn--small btn--quiet" type="submit">Close</button>
+      </form>
+      {% endif %}
+    </div>
+  </article>
+  {% endfor %}
+</div>
+{% else %}
+<p class="empty">No projects yet. Post your first brief and students can start applying.</p>
+{% endif %}
+{% endblock %}

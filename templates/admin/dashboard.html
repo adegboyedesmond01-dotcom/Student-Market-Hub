@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Admin — StudentProjectHub{% endblock %}
+
+{% block content %}
+<section class="page-head">
+  <p class="record-label">Platform</p>
+  <h1 class="display">Admin overview</h1>
+</section>
+
+<section class="stat-grid">
+  <article class="stat"><p class="stat-num">{{ stats.students }}</p><p class="stat-label">Students</p></article>
+  <article class="stat"><p class="stat-num">{{ stats.clients }}</p><p class="stat-label">Clients</p></article>
+  <article class="stat"><p class="stat-num">{{ stats.projects }}</p><p class="stat-label">Projects</p></article>
+  <article class="stat"><p class="stat-num">{{ stats.suspended }}</p><p class="stat-label">Suspended</p></article>
+  <article class="stat stat--seal"><p class="stat-num">{{ stats.certificates }}</p><p class="stat-label">Certificates issued</p></article>
+</section>
+
+<section class="panel">
+  <h2 class="panel-title">Newest accounts</h2>
+  {% if recent %}
+  <table class="ledger">
+    <thead>
+      <tr><th>Name</th><th>Email</th><th>Role</th><th>Status</th><th>Joined</th></tr>
+    </thead>
+    <tbody>
+      {% for u in recent %}
+      <tr>
+        <td>{{ u.fullname }}</td>
+        <td class="mono">{{ u.email }}</td>
+        <td><span class="role-tag role-tag--{{ u.role }}">{{ u.role }}</span></td>
+        <td class="mono">{{ u.status }}</td>
+        <td class="mono">{{ u.created_at.strftime('%d %b %Y') }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p class="empty">No accounts registered yet.</p>
+  {% endif %}
+</section>
+{% endblock %}

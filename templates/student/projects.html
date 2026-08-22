@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block title %}Find work — StudentProjectHub{% endblock %}
+
+{% block content %}
+<section class="page-head">
+  <p class="record-label">Open briefs</p>
+  <h1 class="display">Find work</h1>
+  <p class="lede">Every project here is posted by a real company and comes with an assessed certificate when it's approved.</p>
+</section>
+
+<form class="filters" method="get">
+  <label class="field">
+    <span>Search</span>
+    <input type="search" name="q" value="{{ search }}" placeholder="inventory system, chatbot...">
+  </label>
+  <label class="field">
+    <span>Category</span>
+    <select name="category">
+      <option value="">All categories</option>
+      {% for c in categories %}
+      <option value="{{ c.category }}" {% if category == c.category %}selected{% endif %}>{{ c.category }}</option>
+      {% endfor %}
+    </select>
+  </label>
+  <button class="btn btn--quiet" type="submit">Filter</button>
+</form>
+
+{% if projects %}
+<div class="project-list">
+  {% for p in projects %}
+  <article class="project">
+    <div class="project-head">
+      <h2 class="project-title">
+        <a href="{{ url_for('student.project_detail', project_id=p.id) }}">{{ p.title }}</a>
+      </h2>
+      {% if p.already_applied %}<span class="status status--draft">applied</span>{% endif %}
+    </div>
+
+    <p class="project-client">{{ p.client_name }}</p>
+
+    <dl class="project-meta">
+      <div><dt>Reward</dt>
+        <dd>{% if p.budget and p.budget > 0 %}₦{{ '{:,.0f}'.format(p.budget) }}{% else %}Experience only{% endif %}</dd></div>
+      <div><dt>Difficulty</dt><dd>{{ p.difficulty|capitalize }}</dd></div>
+      <div><dt>Deadline</dt><dd>{{ p.deadline.strftime('%d %b %Y') }}</dd></div>
+      <div><dt>Places left</dt><dd>{{ p.max_students - p.taken }} of {{ p.max_students }}</dd></div>
+    </dl>
+
+    {% if p.skill_list %}<p class="project-skills">{{ p.skill_list }}</p>{% endif %}
+
+    <div class="project-actions">
+      <a class="btn btn--small" href="{{ url_for('student.project_detail', project_id=p.id) }}">View project</a>
+    </div>
+  </article>
+  {% endfor %}
+</div>
+{% else %}
+<p class="empty">No open projects match that search. Try clearing the filters.</p>
+{% endif %}
+{% endblock %}

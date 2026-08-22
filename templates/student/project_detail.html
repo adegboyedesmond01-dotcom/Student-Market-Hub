@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}{{ project.title }} — StudentProjectHub{% endblock %}
+
+{% block content %}
+<p class="backlink"><a href="{{ url_for('student.browse') }}">Back to open briefs</a></p>
+
+<section class="page-head">
+  <p class="record-label">{{ project.category }}</p>
+  <h1 class="display">{{ project.title }}</h1>
+  <p class="lede">{{ project.client_name }}{% if project.website %} · {{ project.website }}{% endif %}</p>
+</section>
+
+<section class="stat-grid">
+  <article class="stat">
+    <p class="stat-num">{% if project.budget and project.budget > 0 %}₦{{ '{:,.0f}'.format(project.budget) }}{% else %}—{% endif %}</p>
+    <p class="stat-label">Reward</p>
+  </article>
+  <article class="stat"><p class="stat-num">{{ (project.deadline - today).days }}</p><p class="stat-label">Days left</p></article>
+  <article class="stat"><p class="stat-num">{{ project.max_students - project.taken }}</p><p class="stat-label">Places left</p></article>
+  <article class="stat"><p class="stat-num">{{ project.difficulty|capitalize }}</p><p class="stat-label">Difficulty</p></article>
+</section>
+
+<section class="panel">
+  <h2 class="panel-title">What needs building</h2>
+  <p class="prose">{{ project.description }}</p>
+  {% if project.skill_list %}
+  <p class="project-skills">Skills needed: {{ project.skill_list }}</p>
+  {% endif %}
+</section>
+
+<section class="panel">
+  <h2 class="panel-title">Apply for this project</h2>
+
+  {% if application %}
+    <p class="empty">
+      You applied on {{ application.applied_at.strftime('%d %b %Y') }}.
+      Status: <strong>{{ application.status }}</strong>.
+      {% if application.status == 'accepted' %} The project is on your dashboard now.{% endif %}
+    </p>
+  {% elif project.taken >= project.max_students %}
+    <p class="empty">Every place on this project has been filled.</p>
+  {% else %}
+    <form method="post" action="{{ url_for('student.apply', project_id=project.id) }}" novalidate>
+      <label class="field">
+        <span>Why are you a good fit?</span>
+        <textarea name="cover_letter" rows="6" required minlength="40"
+          placeholder="What you've built before, the tools you'd use, how you'd approach this."></textarea>
+      </label>
+      <button class="btn" type="submit">Send application</button>
+    </form>
+  {% endif %}
+</section>
+{% endblock %}

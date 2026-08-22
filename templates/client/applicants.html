@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}Applicants — StudentProjectHub{% endblock %}
+
+{% block content %}
+<p class="backlink"><a href="{{ url_for('client.projects') }}">Back to your projects</a></p>
+
+<section class="page-head">
+  <p class="record-label">Applicants</p>
+  <h1 class="display">{{ project.title }}</h1>
+  <p class="lede">{{ project.taken }} of {{ project.max_students }} places filled.</p>
+</section>
+
+{% if applicants %}
+<div class="project-list">
+  {% for a in applicants %}
+  <article class="project">
+    <div class="project-head">
+      <h2 class="project-title">{{ a.fullname }}</h2>
+      <span class="status status--{{ a.status }}">{{ a.status }}</span>
+    </div>
+
+    <dl class="project-meta">
+      <div><dt>University</dt><dd>{{ a.university or '—' }}</dd></div>
+      <div><dt>Department</dt><dd>{{ a.department or '—' }}</dd></div>
+      <div><dt>Level</dt><dd>{{ a.level or '—' }}</dd></div>
+      <div><dt>Completed</dt><dd>{{ a.completed_projects }} projects</dd></div>
+      <div><dt>Applied</dt><dd>{{ a.applied_at.strftime('%d %b %Y') }}</dd></div>
+    </dl>
+
+    <p class="prose prose--quote">{{ a.cover_letter }}</p>
+
+    {% if a.status == 'pending' and project.taken < project.max_students %}
+    <div class="project-actions">
+      <form method="post" action="{{ url_for('client.accept_application', application_id=a.id) }}">
+        <button class="btn btn--small" type="submit">Accept</button>
+      </form>
+      <form method="post" action="{{ url_for('client.reject_application', application_id=a.id) }}">
+        <button class="btn btn--small btn--quiet" type="submit">Decline</button>
+      </form>
+    </div>
+    {% endif %}
+  </article>
+  {% endfor %}
+</div>
+{% else %}
+<p class="empty">No applications yet. Students see this project on the open briefs page.</p>
+{% endif %}
+{% endblock %}

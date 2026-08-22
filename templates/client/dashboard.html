@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}Client dashboard — StudentProjectHub{% endblock %}
+
+{% block content %}
+<section class="page-head page-head--split">
+  <div>
+    <p class="record-label">Client account</p>
+    <h1 class="display">{{ profile.company_name or g.user.fullname }}</h1>
+    {% if profile.website %}<p class="lede">{{ profile.website }}</p>{% endif %}
+  </div>
+  <a class="btn" href="{{ url_for('client.create_project') }}">Post a project</a>
+</section>
+
+<section class="stat-grid">
+  <article class="stat"><p class="stat-num">{{ stats.posted }}</p><p class="stat-label">Projects posted</p></article>
+  <article class="stat"><p class="stat-num">{{ stats.open }}</p><p class="stat-label">Currently open</p></article>
+  <article class="stat"><p class="stat-num">{{ stats.applications }}</p><p class="stat-label">New applications</p></article>
+  <article class="stat"><p class="stat-num">{{ stats.awaiting_review }}</p><p class="stat-label">Awaiting review</p></article>
+  <article class="stat stat--seal"><p class="stat-num">{{ stats.completed }}</p><p class="stat-label">Completed</p></article>
+</section>
+
+<section class="panel">
+  <h2 class="panel-title">Latest projects</h2>
+  {% if recent %}
+  <table class="ledger">
+    <thead><tr><th>Title</th><th>Status</th><th>Deadline</th></tr></thead>
+    <tbody>
+      {% for p in recent %}
+      <tr>
+        <td>{{ p.title }}</td>
+        <td><span class="status status--{{ p.status }}">{{ p.status }}</span></td>
+        <td class="mono">{{ p.deadline.strftime('%d %b %Y') if p.deadline else '—' }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <p class="card-foot"><a href="{{ url_for('client.projects') }}">See all projects</a></p>
+  {% else %}
+  <p class="empty">No projects yet. Post your first brief and students can start applying.</p>
+  {% endif %}
+</section>
+{% endblock %}

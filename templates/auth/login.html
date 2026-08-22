@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Sign in — StudentProjectHub{% endblock %}
+{% block body_class %}gate{% endblock %}
+{% block main_class %}gate-shell{% endblock %}
+
+{% block content %}
+<section class="gate-pitch">
+  <span class="mark-seal mark-seal--lg" aria-hidden="true"></span>
+  <h1 class="display">Real projects.<br>Verified experience.</h1>
+  <p class="lede">Students take on briefs from real companies, submit the work, and leave with an assessed record of what they built — not just a course code.</p>
+  <dl class="record-strip">
+    <div><dt>Post</dt><dd>Companies publish live briefs</dd></div>
+    <div><dt>Build</dt><dd>Students apply, work, submit</dd></div>
+    <div><dt>Verify</dt><dd>Assessed work becomes a certificate</dd></div>
+  </dl>
+</section>
+
+<section class="card">
+  <p class="record-label">Sign in</p>
+  <h2 class="card-title">Welcome back</h2>
+
+  <form method="post" novalidate>
+    <label class="field">
+      <span>Email</span>
+      <input type="email" name="email" value="{{ email }}" required autofocus autocomplete="email">
+    </label>
+    <label class="field">
+      <span>Password</span>
+      <input type="password" name="password" required autocomplete="current-password">
+    </label>
+    <button class="btn btn--full" type="submit">Sign in</button>
+  </form>
+
+  <p class="card-foot">New here? <a href="{{ url_for('auth.register') }}">Create an account</a></p>
+</section>
+{% endblock %}
